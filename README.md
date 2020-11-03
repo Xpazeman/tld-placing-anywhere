@@ -11,5 +11,6 @@ Mod for The Long Dark that removes restrictions when placing items, and adds con
 * The game by default rotates objects on the Y axis with the mouse wheel or with Q/E.
 * With T/Y you can rotate on X axis, and with G/H on the Z axis.
 * B/N offset the object up and down.
+* Pressing Shift makes the increments smaller (25%)
 * Rotation is applied using the object as refrence, so what direction "forward" is will change if you rotate the object on a different axis.
 

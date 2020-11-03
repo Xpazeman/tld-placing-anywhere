@@ -8,9 +8,8 @@ Mod for The Long Dark that removes restrictions when placing items, and adds con
 * Move PlacingAnywhere.dll into the Mods folder in your TLD install directory.
 
 ## Controls
-* The game by default rotates objects on the Y axis with the mouse wheel.
-* When placing an object, holding LeftAlt and moving the mouse allows you to rotate the object in the X and Z axis.
-* If the object sinks into the surface or another object, holding the Z key makes it conform to the surface under the cursor.
-* Period key makes the object rotate 45 degrees in the Y axis.
-* Comma key makes the object rotate 45 degrees in the X axis (useful to put books upright, for example).
+* The game by default rotates objects on the Y axis with the mouse wheel or with Q/E.
+* With T/Y you can rotate on X axis, and with G/H on the Z axis.
+* B/N offset the object up and down.
+* Rotation is applied using the object as refrence, so what direction "forward" is will change if you rotate the object on a different axis.
 

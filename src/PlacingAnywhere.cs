@@ -8,8 +8,10 @@ namespace PlacingAnywhere
     {
         public static bool isPlacing = false;
         public static Vector3 lastRotation;
+        public static float positionYOffset = 0f;
         public static float mouseSensivity = 0;
-        public static float rotateRate = 0.15f;
+        public static float rotateAngle = 15f;
+        public static float positionOffset = 0.02f;
         public static float nextRotate;
 
         public override void OnApplicationStart()
@@ -19,7 +21,6 @@ namespace PlacingAnywhere
 
         public static RaycastHit DoRayCast(Vector3 start, Vector3 direction, bool includeGear)
         {
-            //int num = (int)InvPrivMethod(GameManager.GetPlayerManagerComponent(), "GetLayerMaskForPlaceMeshRaycast", new object[0]);
             int num = PlayerManager.GetLayerMaskForPlaceMeshRaycast();
 
             if (includeGear)

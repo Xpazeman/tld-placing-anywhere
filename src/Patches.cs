@@ -14,110 +14,90 @@ namespace PlacingAnywhere
             if (!PlacingAnywhere.isPlacing)
             {
                 PlacingAnywhere.isPlacing = true;
-                PlacingAnywhere.mouseSensivity = GameManager.GetVpFPSPlayer().FPSCamera.MouseSensitivity;
                 PlacingAnywhere.lastRotation = gameObject.transform.eulerAngles;
             }
 
             gameObject.transform.eulerAngles = PlacingAnywhere.lastRotation;
 
-            /*if (Input.mouseScrollDelta.y != 0)
+            //X Rotation - G/H
+            if (InputManager.GetKeyDown(InputManager.m_CurrentContext, KeyCode.H))
             {
-                float angleUp = Input.mouseScrollDelta.y;
-                if (!Input.GetKey(KeyCode.LeftShift))
+                if (InputManager.GetSprintDown(InputManager.m_CurrentContext))
                 {
-                    angleUp *= 5;
+                    gameObject.transform.Rotate(Vector3.right, PlacingAnywhere.rotateAngle / 4f, Space.Self);
                 }
-
-                gameObject.transform.Rotate(Vector3.up, angleUp, Space.World);
-            }*/
-
-            /*if (Input.GetKey(KeyCode.N) && Time.time > PlacingAnywhere.nextRotate)
+                else
+                {
+                    gameObject.transform.Rotate(Vector3.right, PlacingAnywhere.rotateAngle, Space.Self);
+                }
+                
+            }
+            else if (InputManager.GetKeyDown(InputManager.m_CurrentContext, KeyCode.G))
             {
-                PlacingAnywhere.nextRotate = Time.time + PlacingAnywhere.rotateRate;
-
-                System.Random r = new System.Random();
-                float angleUp = r.Next(0, 360);
-
-                gameObject.transform.Rotate(Vector3.up, angleUp, Space.World);
-            }*/
-
-            if (Input.GetKey(KeyCode.Period) && Time.time > PlacingAnywhere.nextRotate)
-            {
-                PlacingAnywhere.nextRotate = Time.time + PlacingAnywhere.rotateRate;
-                gameObject.transform.Rotate(Vector3.up, 45f, Space.Self);
+                if (InputManager.GetSprintDown(InputManager.m_CurrentContext))
+                {
+                    gameObject.transform.Rotate(Vector3.right, -(PlacingAnywhere.rotateAngle / 4f), Space.Self);
+                }
+                else
+                {
+                    gameObject.transform.Rotate(Vector3.right, -PlacingAnywhere.rotateAngle, Space.Self);
+                }
+                
             }
 
-            if (Input.GetKey(KeyCode.Comma) && Time.time > PlacingAnywhere.nextRotate)
+            //Y Rotation - Q/E - Handled by vanilla 
+
+            //Z Rotation - T/Y
+            if (InputManager.GetKeyDown(InputManager.m_CurrentContext, KeyCode.Y))
             {
-                PlacingAnywhere.nextRotate = Time.time + PlacingAnywhere.rotateRate;
-                gameObject.transform.Rotate(Vector3.right, 45f, Space.Self);
+                if (InputManager.GetSprintDown(InputManager.m_CurrentContext))
+                {
+                    gameObject.transform.Rotate(Vector3.forward, PlacingAnywhere.rotateAngle / 4f, Space.Self);
+                }
+                else
+                {
+                    gameObject.transform.Rotate(Vector3.forward, PlacingAnywhere.rotateAngle, Space.Self);
+                }
+                
             }
-
-            //Conform to surface
-            if (Input.GetKey(KeyCode.Z))
+            else if (InputManager.GetKeyDown(InputManager.m_CurrentContext, KeyCode.T))
             {
-                vp_FPSCamera cam = GameManager.GetVpFPSPlayer().FPSCamera;
-
-                RaycastHit raycastHit = PlacingAnywhere.DoRayCast(cam.transform.position, cam.transform.forward, true);
-
-                gameObject.transform.position = raycastHit.point;
-
-                Mesh mesh = PlacingAnywhere.GetMesh(gameObject);
-                if (mesh == null)
+                if (InputManager.GetSprintDown(InputManager.m_CurrentContext))
                 {
-                    Debug.LogError("Failed to get mesh for " + gameObject.name);
-                    return;
+                    gameObject.transform.Rotate(Vector3.forward, -(PlacingAnywhere.rotateAngle / 4f), Space.Self);
                 }
-
-                Vector3[] vertices = new Vector3[0];
-
-                if (mesh.isReadable)
+                else
                 {
-                    vertices = mesh.vertices;
-                }                    
-                    
-                float closestPoint = float.PositiveInfinity;
-
-                foreach (Vector3 position in vertices)
-                {
-                    Vector3 point = gameObject.transform.TransformPoint(position);
-                    float dist = PlacingAnywhere.SignedDistancePlanePoint(raycastHit.normal, raycastHit.point, point);
-                    if (dist < closestPoint)
-                    {
-                        closestPoint = dist;
-                    }
-                }
-
-
-                //Only apply if point found
-                if (!float.IsPositiveInfinity(closestPoint))
-                {
-                    gameObject.transform.Translate(raycastHit.normal * -closestPoint, Space.World);
+                    gameObject.transform.Rotate(Vector3.forward, -PlacingAnywhere.rotateAngle, Space.Self);
                 }
             }
 
-            Vector2 cameraMovementMouse = InputManager.GetCameraMovementMouse(__instance);
-            Transform transform = GameManager.GetMainCamera().transform;
-
-            if (Input.GetKey(KeyCode.LeftAlt))
+            //Y Position - B/N
+            if (InputManager.GetKeyDown(InputManager.m_CurrentContext, KeyCode.N))
             {
-                //Stop camera movement
-                GameManager.GetVpFPSPlayer().FPSCamera.MouseSensitivity = 0f;
-
-                float angleForward = cameraMovementMouse.x * 1f;
-                float angleRight = cameraMovementMouse.y * 1f;
-
-                gameObject.transform.Rotate(transform.forward, -angleForward, Space.World);
-                gameObject.transform.Rotate(transform.right, angleRight, Space.World);
-
-                //PlacingAnywhere.lastRotation = gameObject.transform.eulerAngles;
+                if (InputManager.GetSprintDown(InputManager.m_CurrentContext))
+                {
+                    PlacingAnywhere.positionYOffset += (PlacingAnywhere.positionOffset / 4f);
+                }
+                else
+                {
+                    PlacingAnywhere.positionYOffset += PlacingAnywhere.positionOffset;
+                }
+                
             }
-            else
+            else if (InputManager.GetKeyDown(InputManager.m_CurrentContext, KeyCode.B))
             {
-                //Restore camera movement
-                if (PlacingAnywhere.mouseSensivity > 0)
-                    GameManager.GetVpFPSPlayer().FPSCamera.MouseSensitivity = PlacingAnywhere.mouseSensivity;
+                if (InputManager.GetSprintDown(InputManager.m_CurrentContext))
+                {
+                    PlacingAnywhere.positionYOffset -= (PlacingAnywhere.positionOffset / 4f);
+                }
+                else
+                {
+                    PlacingAnywhere.positionYOffset -= PlacingAnywhere.positionOffset;
+                }
             }
+
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + PlacingAnywhere.positionYOffset, gameObject.transform.position.z);
 
             PlacingAnywhere.lastRotation = gameObject.transform.eulerAngles;
 
@@ -131,8 +111,7 @@ namespace PlacingAnywhere
         private static void Postfix(PlayerManager __instance)
         {
             PlacingAnywhere.isPlacing = false;
-            if (PlacingAnywhere.mouseSensivity > 0)
-                GameManager.GetVpFPSPlayer().FPSCamera.MouseSensitivity = PlacingAnywhere.mouseSensivity;
+            PlacingAnywhere.positionYOffset = 0;
         }
     }
 
@@ -142,8 +121,7 @@ namespace PlacingAnywhere
         private static void Postfix(PlayerManager __instance)
         {
             PlacingAnywhere.isPlacing = false;
-            if (PlacingAnywhere.mouseSensivity > 0)
-                GameManager.GetVpFPSPlayer().FPSCamera.MouseSensitivity = PlacingAnywhere.mouseSensivity;
+            PlacingAnywhere.positionYOffset = 0;
         }
     }
 }

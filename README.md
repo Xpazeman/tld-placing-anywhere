@@ -3,6 +3,11 @@
 Mod for The Long Dark that removes restrictions when placing items, and adds controls to rotate and position the object.
 
 ## Changelog
+### v2.3
+* Greatly improved performance in conform mode
+* Fixed issue with placing lamps while being held
+* Fixed issue with certain placement modes and placing items in cooking spots
+
 ### v2.2
 * Added placing HUD
 * Added conform to surface functionality (ON by default)

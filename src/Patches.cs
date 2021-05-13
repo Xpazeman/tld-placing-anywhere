@@ -24,17 +24,15 @@ namespace PlacingAnywhere
                 return;
             }
 
-            bool isSpecial = false;
-            GearItem gi = gameObject.GetComponent<GearItem>();
-            if ((gi != null && gi.m_CookingPotItem) || gameObject.GetComponent<Campfire>())
-            {
-                isSpecial = true;
-            }
-
-            gameObject.transform.eulerAngles = PlacingAnywhere.lastRotation;
-
             vp_FPSCamera cam = GameManager.GetVpFPSPlayer().FPSCamera;
             RaycastHit raycastHit = PlacingAnywhere.DoRayCast(cam.transform.position, cam.transform.forward, true);
+
+            GearPlacePoint gearPlacePoint = __instance.GetGearPlacePoint(raycastHit.collider.gameObject, raycastHit.point);
+
+            if (gearPlacePoint == null)
+            {
+                gameObject.transform.eulerAngles = PlacingAnywhere.lastRotation;
+            }
 
             //Z Rotation - G/H
             if (KeyboardUtilities.InputManager.GetKey(Settings.options.rotateZRight) && Time.time > PlacingAnywhere.nextRotate)
@@ -129,7 +127,6 @@ namespace PlacingAnywhere
 
             if (KeyboardUtilities.InputManager.GetKeyDown(Settings.options.resetRotation))
             {
-                //gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
                 float diff = Vector3.Dot(Vector3.up, raycastHit.normal);
                 if (diff > 0.05f)
                 {
@@ -147,13 +144,15 @@ namespace PlacingAnywhere
                 {
                     PlacingAnywhere.conformToggle = false;
                     HUDMessage.AddMessage("Conform to surface: off");
+                    PlacingAnywhere.RemoveItemsFromPhysicalCollisionMask();
                 }
                 else
                 {
                     PlacingAnywhere.conformToggle = true;
                     PlacingAnywhere.positionYOffset = 0;
                     HUDMessage.AddMessage("Conform to surface: on");
-
+                    PlacingAnywhere.AddItemsToPhysicalCollisionMask();
+                    
                 }
             }
 
@@ -207,7 +206,11 @@ namespace PlacingAnywhere
                     cam.MouseSensitivity = PlacingAnywhere.mouseSensivity;
             }
 
-            if (PlacingAnywhere.snapToggle && !isSpecial)
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + PlacingAnywhere.positionYOffset, gameObject.transform.position.z);
+
+            
+
+            if (PlacingAnywhere.snapToggle && gearPlacePoint == null)
             {
                 if (raycastHit.collider != null)
                 {
@@ -216,42 +219,13 @@ namespace PlacingAnywhere
                     if (goHit.GetComponent<GearItem>() != null)
                     {
                         gameObject.transform.rotation = goHit.transform.rotation;
-                        gameObject.transform.position = goHit.transform.position;
+                        gameObject.transform.position = new Vector3(goHit.transform.position.x, gameObject.transform.position.y, goHit.transform.position.z);
 
                     }
                 }
             }
 
-            if (!PlacingAnywhere.conformToggle || isSpecial)
-            {
-                if (!PlacingAnywhere.snapToggle)
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + PlacingAnywhere.positionYOffset, gameObject.transform.position.z);
-            }
-            else
-            {
-                gameObject.transform.position = raycastHit.point;
-
-                float closestPoint = float.PositiveInfinity;
-
-                foreach (Vector3 position in PlacingAnywhere.currentVertices)
-                {
-                    Vector3 point = gameObject.transform.TransformPoint(position);
-                    float dist = PlacingAnywhere.SignedDistancePlanePoint(raycastHit.normal, raycastHit.point, point);
-                    if (dist < closestPoint)
-                    {
-                        closestPoint = dist;
-                    }
-                }
-
-                //Only apply if point found
-                if (!float.IsPositiveInfinity(closestPoint))
-                {
-                    gameObject.transform.Translate(raycastHit.normal * -closestPoint, Space.World);
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + PlacingAnywhere.positionYOffset, gameObject.transform.position.z);
-                }
-            }
-
-            if (PlacingAnywhere.snapToggle && !isSpecial)
+            if (PlacingAnywhere.snapToggle && gearPlacePoint == null)
             {
                 PlacingAnywhere.SnapToPositionBelow(gameObject);
                 PlacingAnywhere.SnapToRotationBelow(gameObject);
@@ -276,6 +250,16 @@ namespace PlacingAnywhere
             }
 
             PlacingAnywhere.currentVertices.Clear();
+
+            if (PlacingAnywhere.conformToggle)
+            {
+                PlacingAnywhere.AddItemsToPhysicalCollisionMask();
+            }
+
+            if (__instance.m_ItemInHands != null && __instance.m_ItemInHands.gameObject == objectToPlace)
+            {
+                PlacingAnywhere.RemoveItemsFromPhysicalCollisionMask();
+            }
 
             List<Mesh> meshes = PlacingAnywhere.GetAllMeshes(objectToPlace);
 
@@ -318,8 +302,12 @@ namespace PlacingAnywhere
             PlacingAnywhere.isPlacing = false;
             PlacingAnywhere.positionYOffset = 0;
 
+            PlacingAnywhere.currentVertices.Clear();
+
             if (PlacingAnywhere.mouseSensivity > 0)
                 GameManager.GetVpFPSPlayer().FPSCamera.MouseSensitivity = PlacingAnywhere.mouseSensivity;
+
+            PlacingAnywhere.RemoveItemsFromPhysicalCollisionMask();
 
             if (Settings.options.resetModes)
             {
@@ -330,16 +318,6 @@ namespace PlacingAnywhere
             if (PlacingAnywhere.paHUD != null)
             {
                 PlacingAnywhere.paHUD.SetActive(false);
-            }
-
-            if (__instance.m_ObjectToPlace != null)
-            {
-                GearItem gi = __instance.m_ObjectToPlace.GetComponent<GearItem>();
-
-                if (gi != null && gi.m_PlacePointGuid == "pa_placed")
-                {
-                    gi.m_PlacePointGuid = null;
-                }
             }
         }
     }
@@ -352,8 +330,12 @@ namespace PlacingAnywhere
             PlacingAnywhere.isPlacing = false;
             PlacingAnywhere.positionYOffset = 0;
 
+            PlacingAnywhere.currentVertices.Clear();
+
             if (PlacingAnywhere.mouseSensivity > 0)
                 GameManager.GetVpFPSPlayer().FPSCamera.MouseSensitivity = PlacingAnywhere.mouseSensivity;
+
+            PlacingAnywhere.RemoveItemsFromPhysicalCollisionMask();
 
             if (Settings.options.resetModes)
             {

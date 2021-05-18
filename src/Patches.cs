@@ -11,6 +11,11 @@ namespace PlacingAnywhere
     {
         private static void Postfix(PlayerManager __instance, ref MeshLocationCategory __result)
         {
+            if (__instance == null)
+            {
+                return;
+            }
+
             GameObject gameObject = __instance.GetObjectToPlace();
 
             if (!PlacingAnywhere.isPlacing)
@@ -27,7 +32,12 @@ namespace PlacingAnywhere
             vp_FPSCamera cam = GameManager.GetVpFPSPlayer().FPSCamera;
             RaycastHit raycastHit = PlacingAnywhere.DoRayCast(cam.transform.position, cam.transform.forward, true);
 
-            GearPlacePoint gearPlacePoint = __instance.GetGearPlacePoint(raycastHit.collider.gameObject, raycastHit.point);
+            GearPlacePoint gearPlacePoint = null;
+
+            if (raycastHit.collider != null)
+            {
+                gearPlacePoint = __instance.GetGearPlacePoint(raycastHit.collider.gameObject, raycastHit.point);
+            }
 
             if (gearPlacePoint == null)
             {
@@ -208,8 +218,6 @@ namespace PlacingAnywhere
 
             gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + PlacingAnywhere.positionYOffset, gameObject.transform.position.z);
 
-            
-
             if (PlacingAnywhere.snapToggle && gearPlacePoint == null)
             {
                 if (raycastHit.collider != null)
@@ -366,11 +374,31 @@ namespace PlacingAnywhere
         }
     }
 
+    //Fix for ModComponent Compatibility
+    [HarmonyPatch(typeof(GameManager), "Awake")]
+    internal class GameManager_Awake
+    {
+        public static void Postfix(GameManager __instance)
+        {
+            PlacingAnywhere.GameManagerIsAwake = true;
+        }
+    }
+
     [HarmonyPatch(typeof(GearManager), "Add")]
     internal class GearManager_Add
     {
         public static void Prefix(GearItem gi)
         {
+            if (!PlacingAnywhere.GameManagerIsAwake)
+            {
+                return;
+            }
+
+            if (gi == null || gi.gameObject == null)
+            {
+                return;
+            }
+
             if (Settings.options.fixColliders && PlacingAnywhere.fixableObjects.Any(s => gi.gameObject.name.ToLower().Contains(s)))
             {
                 PlacingAnywhere.FixBoxCollider(gi.gameObject);

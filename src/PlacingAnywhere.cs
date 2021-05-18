@@ -34,6 +34,8 @@ namespace PlacingAnywhere
         public static Dictionary<string, string> buttonLabels = new Dictionary<string, string>();
         public static List<ButtonPrompt> buttonList;
 
+        public static bool GameManagerIsAwake = false;
+
         public static List<string> fixableObjects = new List<string> { "ammobox", "beefjerky", "book", "bottleantibiotics", "bottlepainkillers", "coffeetin", "condensedmilk", "emergencystim", "energybar", "granolabar", "greenteapackage", "hardcase", "ketchupchips", "mre", "peanutbutter", "sewingkit", "soda", "spraypaintcan", "stumpremover", "water1000", "water500", "waterpurificationtablets" };
 
         public override void OnApplicationStart()

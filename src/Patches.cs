@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using UnityEngine;
 using System;
 using System.Linq;
@@ -185,9 +185,12 @@ namespace PlacingAnywhere
             Vector2 cameraMovementMouse = InputManager.GetCameraMovementMouse(__instance);
             Transform transform = GameManager.GetMainCamera().transform;
 
-            if (KeyboardUtilities.InputManager.GetKey(KeyCode.LeftAlt))
+            if (KeyboardUtilities.InputManager.GetKey(Settings.options.mouseRotationKey))
             {
                 //Stop camera movement
+                if (cam.MouseSensitivity > 0)
+                    PlacingAnywhere.mouseSensivity = cam.MouseSensitivity;
+
                 cam.MouseSensitivity = 0f;
 
                 float angleForward = cameraMovementMouse.x * 1f;
@@ -251,6 +254,7 @@ namespace PlacingAnywhere
         private static void Prefix(PlayerManager __instance, GameObject objectToPlace)
         {
             PlacingAnywhere.mouseSensivity = GameManager.GetVpFPSPlayer().FPSCamera.MouseSensitivity;
+
             if (!Settings.options.autoResetRotation)
             {
                 PlacingAnywhere.isPlacing = true;
@@ -302,7 +306,7 @@ namespace PlacingAnywhere
         }
     }
 
-    [HarmonyPatch(typeof(PlayerManager), "PlaceMeshInWorld")]
+    [HarmonyPatch(typeof(PlayerManager), "ExitMeshPlacement")]
     internal class PlayerManager_PlaceMeshInWorld
     {
         private static void Postfix(PlayerManager __instance)
@@ -330,7 +334,7 @@ namespace PlacingAnywhere
         }
     }
 
-    [HarmonyPatch(typeof(PlayerManager), "CancelPlaceMesh")]
+    /*[HarmonyPatch(typeof(PlayerManager), "CancelPlaceMesh")]
     internal class PlayerManager_CancelPlaceMesh
     {
         private static void Postfix(PlayerManager __instance)
@@ -356,7 +360,7 @@ namespace PlacingAnywhere
                 PlacingAnywhere.paHUD.SetActive(false);
             }
         }
-    }
+    }*/
 
     [HarmonyPatch(typeof(PlayerManager), "TintObject", new Type[] { typeof(GameObject), typeof(MeshLocationCategory) })]
     internal class PlayerManager_TintObject

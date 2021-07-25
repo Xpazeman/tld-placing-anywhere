@@ -8,14 +8,6 @@ namespace PlacingAnywhere
     {
         [Section("General Options")]
 
-        [Name("Show HUD")]
-        [Description("If disabled, mod's placing HUD will be hidden.")]
-        public bool showHUD = true;
-
-        [Name("Simple HUD")]
-        [Description("If enabled, rotation and offset keys will be hidden.")]
-        public bool simpleHUD = false;
-
         [Name("Conform to surface default")]
         [Description("If enabled, conform to surface will be enabled by default.")]
         public bool conformDefault = true;
@@ -39,6 +31,26 @@ namespace PlacingAnywhere
         [Name("Try to fix colliders (Requires scene reload)")]
         [Description("If enabled, some colliders will be adjusted to actual object so they can be placed better, disable to keep vanilla colliders.")]
         public bool fixColliders = true;
+
+        [Section("HUD Options")]
+
+        [Name("Show HUD")]
+        [Description("If disabled, mod's placing HUD will be hidden.")]
+        public bool showHUD = true;
+
+        [Name("Simple HUD")]
+        [Description("If enabled, rotation and offset keys will be hidden.")]
+        public bool simpleHUD = false;
+
+        [Name("HUD offset X")]
+        [Description("Allows user to offset HUD horizontally from original position")]
+        [Slider(-2000, 2000)] // -5, -4, ..., 4, 5
+        public int hudOffsetX = 0;
+
+        [Name("HUD offset Y")]
+        [Description("Allows user to offset HUD vertically from original position")]
+        [Slider(-600, 600)] // -5, -4, ..., 4, 5
+        public int hudOffsetY = 0;
 
         [Section("Key Bindings")]
 
@@ -77,6 +89,10 @@ namespace PlacingAnywhere
         [Name("Conform Toggle")]
         [Description("Toggle if object uses default positioning or if it conforms to the surface under the cursor.")]
         public KeyCode conformToggleKey = KeyCode.Z;
+
+        [Name("Mouse Rotation")]
+        [Description("Allows rotating the object with the mouse instead of the keys.")]
+        public KeyCode mouseRotationKey = KeyCode.LeftAlt;
 
         protected override void OnConfirm()
         {

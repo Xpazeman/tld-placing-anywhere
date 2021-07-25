@@ -50,8 +50,9 @@
     <Reference Include="KeyboardUtilities">
       <HintPath>E:\SteamLibrary\steamapps\common\TheLongDark\Mods\KeyboardUtilities.dll</HintPath>
     </Reference>
-    <Reference Include="MelonLoader.ModHandler">
-      <HintPath>E:\SteamLibrary\steamapps\common\TheLongDark\MelonLoader\MelonLoader.ModHandler.dll</HintPath>
+    <Reference Include="MelonLoader, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\SteamLibrary\steamapps\common\TheLongDark\MelonLoader\MelonLoader.dll</HintPath>
     </Reference>
     <Reference Include="ModSettings">
       <HintPath>E:\SteamLibrary\steamapps\common\TheLongDark\Mods\ModSettings.dll</HintPath>

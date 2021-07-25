@@ -88,7 +88,7 @@ namespace PlacingAnywhere
             buttonConfig.Add("CONFORM", Settings.options.conformToggleKey.ToString());
             buttonConfig.Add("SNAP", Settings.options.snapKey.ToString());
             buttonConfig.Add("FINE", "SHIFT");
-            buttonConfig.Add("FREE", "LEFT ALT");
+            buttonConfig.Add("FREE", Settings.options.mouseRotationKey.ToString());
             buttonConfig.Add("RESET", Settings.options.resetRotation.ToString());
         }
 
@@ -105,8 +105,8 @@ namespace PlacingAnywhere
             
             GameObject bpButton = placingHUD.m_ButtonPromptRight.gameObject;
 
-            float baseX = Screen.width / 4f;
-            float baseY = 160f;
+            float baseX = (Screen.width / 4f) + (float)Settings.options.hudOffsetX;
+            float baseY = 160f + (float)Settings.options.hudOffsetY;
 
             AddHUDButtons(bpButton, baseX, baseY);
         }
@@ -141,9 +141,20 @@ namespace PlacingAnywhere
                     button.m_KeyboardButtonSprite.transform.localScale = new Vector3(2.6f, 1f, 1f);
                 }
 
-                if (bData.Value == "LEFT ALT")
+                if (bData.Key == "FREE")
                 {
-                    button.m_KeyboardButtonSprite.transform.localScale = new Vector3(3.0f, 1f, 1f);
+                    if (bData.Value == "LEFTALT")
+                    {
+                        button.m_KeyboardButtonSprite.transform.localScale = new Vector3(3.0f, 1f, 1f);
+                    }
+                    else
+                    {
+                        if (bData.Value.Length > 1)
+                        {
+                            float extraLength = (bData.Value.Length - 1) * 0.4f;
+                            button.m_KeyboardButtonSprite.transform.localScale = new Vector3((1f + extraLength), 1f, 1f);
+                        }
+                    }
                 }
 
                 float posX = baseX + ((index % 2) * 110f);

@@ -3,10 +3,20 @@
 Mod for The Long Dark that removes restrictions when placing items, and adds controls to rotate and position the object.
 
 ## Changelog
+
+### v2.4
+* Updated to ML 0.4.2
+* Fixed issue with mouse rotation and holding kerosene lamps
+* Added setting to choose mouse rotation key
+* Added settings to position HUD
+* Fixed issue with incompatibility with MoveableContainers
+
 ### v2.3
 * Greatly improved performance in conform mode
 * Fixed issue with placing lamps while being held
 * Fixed issue with certain placement modes and placing items in cooking spots
+* Fix issue with raycat not hitting any collider (when moving object over the sky or certain windows)
+* Added check for future compatibility with ModComponent
 
 ### v2.2
 * Added placing HUD

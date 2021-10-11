@@ -29,7 +29,8 @@ namespace PlacingAnywhere
                 return;
             }
 
-            vp_FPSCamera cam = GameManager.GetVpFPSPlayer().FPSCamera;
+            //vp_FPSCamera cam = GameManager.GetVpFPSPlayer().FPSCamera;
+            vp_FPSCamera cam = GameManager.GetVpFPSCamera();
             RaycastHit raycastHit = PlacingAnywhere.DoRayCast(cam.transform.position, cam.transform.forward, true);
 
             GearPlacePoint gearPlacePoint = null;
@@ -41,7 +42,8 @@ namespace PlacingAnywhere
 
             if (gearPlacePoint == null)
             {
-                gameObject.transform.eulerAngles = PlacingAnywhere.lastRotation;
+                //gameObject.transform.eulerAngles = PlacingAnywhere.lastRotation;
+                gameObject.transform.eulerAngles = new Vector3(PlacingAnywhere.lastRotation.x, gameObject.transform.eulerAngles.y, PlacingAnywhere.lastRotation.z);
             }
 
             //Z Rotation - G/H
@@ -153,14 +155,14 @@ namespace PlacingAnywhere
                 if (PlacingAnywhere.conformToggle)
                 {
                     PlacingAnywhere.conformToggle = false;
-                    HUDMessage.AddMessage("Conform to surface: off");
+                    HUDMessage.AddMessage("Conform to surface: off", false, false);
                     PlacingAnywhere.RemoveItemsFromPhysicalCollisionMask();
                 }
                 else
                 {
                     PlacingAnywhere.conformToggle = true;
                     PlacingAnywhere.positionYOffset = 0;
-                    HUDMessage.AddMessage("Conform to surface: on");
+                    HUDMessage.AddMessage("Conform to surface: on", false, false);
                     PlacingAnywhere.AddItemsToPhysicalCollisionMask();
                     
                 }
@@ -172,12 +174,12 @@ namespace PlacingAnywhere
                 if (PlacingAnywhere.snapToggle)
                 {
                     PlacingAnywhere.snapToggle = false;
-                    HUDMessage.AddMessage("Snap to objects: off");
+                    HUDMessage.AddMessage("Snap to objects: off", false, false);
                 }
                 else
                 {
                     PlacingAnywhere.snapToggle = true;
-                    HUDMessage.AddMessage("Snap to objects: on");
+                    HUDMessage.AddMessage("Snap to objects: on", false, false);
 
                 }
             }

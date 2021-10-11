@@ -4,6 +4,9 @@ Mod for The Long Dark that removes restrictions when placing items, and adds con
 
 ## Changelog
 
+### v2.5
+* Updated to work with TLD 1.95 - Fury, then silence.
+
 ### v2.4
 * Updated to ML 0.4.2
 * Fixed issue with mouse rotation and holding kerosene lamps

@@ -43,6 +43,7 @@ Mod for The Long Dark that removes restrictions when placing items, and adds con
 
 ## Installing the mod
 * If you haven't done so already, install MelonLoader by downloading and running [MelonLoader.Installer.exe](https://github.com/HerpDerpinstine/MelonLoader/releases/latest/download/MelonLoader.Installer.exe).
+* Install MelonLoader 0.6.0, if it isn't in the list, make sure to toggle the option to show alpha pre-releases in the installer settings.
 * You'll need to download and install [ModSettings](https://github.com/zeobviouslyfakeacc/ModSettings/releases/latest/download/ModSettings.dll) by Zeo and [KeyboardUtilities](https://github.com/ds5678/KeyboardUtilities/releases/latest/download/KeyboardUtilities.dll) by ds5678. **MOD WON'T WORK WITHOUT THEM**
 * Download the latest version of PlacingAnywhere.dll from the [releases page](https://github.com/Xpazeman/tld-placing-anywhere/releases/latest and place in your Mods folder.
 

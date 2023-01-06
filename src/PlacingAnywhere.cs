@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MelonLoader;
+using Il2Cpp;
 
 namespace PlacingAnywhere
 {
@@ -24,21 +25,21 @@ namespace PlacingAnywhere
         public static bool conformToggle = true;
         public static bool snapToggle = false;
 
-        public static GameObject paHUD = null;
-        public static ButtonPrompt conformButton = null;
-        public static ButtonPrompt snapButton = null;
+        public static GameObject? paHUD = null;
+        public static ButtonPrompt? conformButton = null;
+        public static ButtonPrompt? snapButton = null;
 
         public static bool isSticking = false;
 
         public static Dictionary<string, string> buttonConfig = new Dictionary<string, string>();
         public static Dictionary<string, string> buttonLabels = new Dictionary<string, string>();
-        public static List<ButtonPrompt> buttonList;
+        public static List<ButtonPrompt>? buttonList;
 
         public static bool GameManagerIsAwake = false;
 
         public static List<string> fixableObjects = new List<string> { "ammobox", "beefjerky", "book", "bottleantibiotics", "bottlepainkillers", "coffeetin", "condensedmilk", "emergencystim", "energybar", "granolabar", "greenteapackage", "hardcase", "ketchupchips", "mre", "peanutbutter", "sewingkit", "soda", "spraypaintcan", "stumpremover", "water1000", "water500", "waterpurificationtablets" };
 
-        public override void OnApplicationStart()
+        public override void OnInitializeMelon()
         {
             Debug.Log("[placing-anywhere] Version " + Assembly.GetExecutingAssembly().GetName().Version);
 
@@ -101,8 +102,8 @@ namespace PlacingAnywhere
 
             paHUD = new GameObject();
 
-            EquipItemPopup placingHUD = InterfaceManager.m_Panel_HUD.m_EquipItemPopup;
-            
+            EquipItemPopup placingHUD = InterfaceManager.GetPanel<Panel_HUD>().m_EquipItemPopup;
+
             GameObject bpButton = placingHUD.m_ButtonPromptRight.gameObject;
 
             float baseX = (Screen.width / 4f) + (float)Settings.options.hudOffsetX;
@@ -172,7 +173,7 @@ namespace PlacingAnywhere
             
             UpdateButtonConfig();
 
-            Object.Destroy(paHUD);
+            UnityEngine.Object.Destroy(paHUD);
             paHUD = null;
         }
 
@@ -340,14 +341,14 @@ namespace PlacingAnywhere
             {
                 if (eachBoxCollider.isTrigger)
                 {
-                    Object.Destroy(eachBoxCollider);
+                    UnityEngine.Object.Destroy(eachBoxCollider);
                 }
             }
 
             BoxCollider boxCollider = gameObject.GetComponentInChildren<BoxCollider>();
             if (boxCollider == null)
             {
-                Object.Destroy(gameObject.GetComponent<MeshCollider>());
+                UnityEngine.Object.Destroy(gameObject.GetComponent<MeshCollider>());
 
                 boxCollider = gameObject.gameObject.AddComponent<BoxCollider>();
                 boxCollider.size = renderer.bounds.extents * 2;

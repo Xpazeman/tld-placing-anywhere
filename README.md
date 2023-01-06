@@ -4,6 +4,9 @@ Mod for The Long Dark that removes restrictions when placing items, and adds con
 
 ## Changelog
 
+### v2.6
+* Updated to work with TLD 2.06
+
 ### v2.5
 * Updated to work with TLD 1.95 - Fury, then silence.
 
